@@ -14,7 +14,7 @@ services:
             - $PWD/${NOTEBOOKS_VOLUME_MOUNT}
         env_file:
             - .env
-            - ./credentials/.env
+            - .credentials/.env
 
     tt-bot-jupyter:
         image: ${JUPYTER_IMAGE}
@@ -30,4 +30,4 @@ services:
             - $PWD/${NOTEBOOKS_VOLUME_MOUNT}
         env_file:
             - .env
-            - ./credentials/.env
+            - .credentials/.env

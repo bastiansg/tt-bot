@@ -3,6 +3,5 @@
 **/*.egg-info
 
 .git/
-.credentials/
 resources/
 notebooks/
