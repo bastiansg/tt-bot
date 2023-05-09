@@ -1,0 +1,12 @@
+services:
+    tt-bot-devcontainer:
+        network_mode: host
+        image: tt-bot-devcontainer
+        container_name: tt-bot-devcontainer
+        build:
+            context: ..
+            dockerfile: .devcontainer/Dockerfile
+        volumes:
+            - ..:/workspace:cached
+        # Please do not comment or remove this line!
+        command: /bin/sh -c "while sleep 1000; do :; done"

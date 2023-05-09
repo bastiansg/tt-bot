@@ -1,0 +1,33 @@
+services:
+    tt-bot-core:
+        image: ${CORE_IMAGE}
+        container_name: tt-bot-core
+        network_mode: host
+        build:
+            context: .
+            dockerfile: ./build/core/Dockerfile
+            args:
+                - PYTHON_VERSION=${PYTHON_VERSION}
+                - PIP_VERSION=${PIP_VERSION}
+        volumes:
+            - $PWD/${SRC_VOLUME_MOUNT}
+            - $PWD/${NOTEBOOKS_VOLUME_MOUNT}
+        env_file:
+            - .env
+            - ./credentials/.env
+
+    tt-bot-jupyter:
+        image: ${JUPYTER_IMAGE}
+        container_name: tt-bot-jupyter
+        network_mode: host
+        build:
+            context: .
+            dockerfile: ./build/jupyter/Dockerfile
+            args:
+                - CORE_IMAGE=${CORE_IMAGE}
+        volumes:
+            - $PWD/${SRC_VOLUME_MOUNT}
+            - $PWD/${NOTEBOOKS_VOLUME_MOUNT}
+        env_file:
+            - .env
+            - ./credentials/.env
