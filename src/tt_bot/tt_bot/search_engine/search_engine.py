@@ -1,24 +1,20 @@
-from more_itertools import flatten
 from langchain.utilities import GoogleSearchAPIWrapper
 
 from tt_bot.logger import get_logger
-from tt_bot.wiki_header import WikiHeader
-from tt_bot.html_parser import HTMLParser
+from tt_bot.html_parsers import SimpleParser, WikiParser
 
 
 logger = get_logger(__name__)
 
 
 class SearchEngine:
-    def __init__(self, num_results: int = 3):
-        self.num_results = num_results
-
-        self.wiki_header = WikiHeader()
-        self.html_parser = HTMLParser()
+    def __init__(self):
+        self.wiki_parser = WikiParser()
+        self.simple_parser = SimpleParser()
         self.search_engine = GoogleSearchAPIWrapper()
 
-    async def search(self, query_text: str) -> list[str]:
-        results = self.search_engine.results(query_text, self.num_results)
+    async def search(self, query_text: str, num_results: int = 3) -> list[str]:
+        results = self.search_engine.results(query_text, num_results)
         logger.info(f"results => {results}")
 
         wiki_results = [
@@ -26,16 +22,8 @@ class SearchEngine:
         ]
 
         if not wiki_results:
-            urls = (result["link"] for result in results)
-            html_texts = await self.html_parser.parse_urls(urls)
-            html_texts = list(flatten(html_texts))
+            html_results = await self.simple_parser.parse_urls(results)
+            return html_results
 
-            return html_texts
-
-        wiki_titles = (
-            wiki_result["title"].split(" - ")[0]
-            for wiki_result in wiki_results
-        )
-
-        wiki_headers = await self.wiki_header.get_headers(wiki_titles)
+        wiki_headers = await self.wiki_parser.get_headers(wiki_results)
         return wiki_headers

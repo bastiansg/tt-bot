@@ -13,16 +13,16 @@ from tt_bot.logger import get_logger
 logger = get_logger(__name__)
 
 
-class HTMLParser:
+class SimpleParser:
     def __init__(
         self,
         find_elements: list[str] = ["p"],
-        min_words: int = 20,
         max_concurrency: int = 50,
+        max_elements: int = 5,
     ):
         self.find_elements = find_elements
-        self.min_words = min_words
         self.max_concurrency = max_concurrency
+        self.max_elements = max_elements
 
         self.asyncio_semaphore = asyncio.Semaphore(max_concurrency)
         self.httpx_client = httpx.AsyncClient()
@@ -37,14 +37,12 @@ class HTMLParser:
         if not text:
             return False
 
-        if len(text.split()) < self.min_words:
-            return False
-
         return True
 
-    async def parse_url(self, url: str) -> list[str]:
+    async def parse_url(self, result: dict) -> Iterator[dict]:
         async with self.asyncio_semaphore:
-            response = await self.httpx_client.get(url)
+            link = result["link"]
+            response = await self.httpx_client.get(link)
             if self.asyncio_semaphore.locked():
                 await asyncio.sleep(random.random())
 
@@ -55,7 +53,7 @@ class HTMLParser:
 
             soup = BeautifulSoup(response.content, features="html.parser")
             found_elements = (
-                soup.findAll(find_element)
+                soup.find_all(find_element, limit=self.max_elements)
                 for find_element in self.find_elements
             )
 
@@ -64,14 +62,25 @@ class HTMLParser:
                 for element in flatten(found_elements)
             )
 
-            texts = [text for text in texts if self.filter_found_text(text)]
-            return texts
+            snippet = result["snippet"]
+            html_results = (
+                {
+                    "link": link,
+                    "text": f"{snippet} {text}",
+                }
+                for text in texts
+                if self.filter_found_text(text)
+            )
 
-    async def parse_urls(self, urls: Iterator[str]) -> list[list[str]]:
+            return html_results
+
+    async def parse_urls(self, results: Iterator[dict]) -> list[dict]:
         async_tasks = [
-            asyncio.create_task(self.parse_url(url))
-            for url in track(list(urls), description="")
+            asyncio.create_task(self.parse_url(result))
+            for result in track(list(results), description="")
         ]
 
-        url_texts = await asyncio.gather(*async_tasks)
-        return url_texts
+        html_results = await asyncio.gather(*async_tasks)
+        html_results = list(flatten(html_results))
+
+        return html_results
