@@ -1,3 +1,3 @@
 #!/bin/env sh
 
-python app.py
+python -m tt_bot.bot.bot.py

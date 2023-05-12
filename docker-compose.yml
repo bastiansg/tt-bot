@@ -43,3 +43,4 @@ services:
                 - CORE_IMAGE=${CORE_IMAGE}
         env_file:
             - .env
+            - .credentials/.env
