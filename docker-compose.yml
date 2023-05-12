@@ -44,3 +44,4 @@ services:
         env_file:
             - .env
             - .credentials/.env
+        restart: unless-stopped

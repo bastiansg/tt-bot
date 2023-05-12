@@ -16,4 +16,4 @@ app-build: core-build
 	docker compose build tt-bot-app
 
 app-run: app-build
-	docker compose up tt-bot-app
+	docker compose up tt-bot-app -d

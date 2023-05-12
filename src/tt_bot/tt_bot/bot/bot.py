@@ -2,7 +2,7 @@ import os
 
 from tt_bot.logger import get_logger
 from telegram.ext import ApplicationBuilder
-from handlers import (
+from .handlers import (
     QAHandler,
     CollectiveCallHandler,
     BlueDollarHandler,
