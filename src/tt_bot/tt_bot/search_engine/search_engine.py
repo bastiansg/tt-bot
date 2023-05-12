@@ -15,8 +15,14 @@ class SearchEngine:
 
     async def search(self, query_text: str, num_results: int = 3) -> list[str]:
         results = self.search_engine.results(query_text, num_results)
-        logger.info(f"results => {results}")
+        if (
+            results[0].get("Result")
+            == "No good Google Search Result was found"
+        ):
+            logger.info("No google results")
+            return []
 
+        logger.info(f"results => {results}")
         wiki_results = [
             result for result in results if "Wikipedia" in result["title"]
         ]

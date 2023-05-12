@@ -31,3 +31,15 @@ services:
         env_file:
             - .env
             - .credentials/.env
+
+    tt-bot-app:
+        image: ${APP_IMAGE}
+        container_name: tt-bot-app
+        network_mode: host
+        build:
+            context: .
+            dockerfile: ./build/app/Dockerfile
+            args:
+                - CORE_IMAGE=${CORE_IMAGE}
+        env_file:
+            - .env

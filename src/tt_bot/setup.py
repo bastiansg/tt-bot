@@ -14,6 +14,7 @@ setup(
         "google-api-python-client==2.86.0",
         "openai==0.27.6",
         "tiktoken==0.4.0",
+        "beautifulsoup4==4.12.2",
     ],
     package_data={"": ["*.yml", "*.yaml"]},
     include_package_data=True,
