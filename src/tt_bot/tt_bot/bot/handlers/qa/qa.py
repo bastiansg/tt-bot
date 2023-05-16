@@ -60,6 +60,7 @@ class QAHandler(BotHandler):
         sim_chunks = await retrieval.retrieve(query_text)
         if not sim_chunks:
             await message.reply_text("I don't know")
+            self.dsp.stop_all()
             return
 
         self.dsp.stop_rand_inv()
@@ -76,7 +77,7 @@ class QAHandler(BotHandler):
             disable_web_page_preview=True,
         )
 
-        self.dsp.stop_intermittent()
+        self.dsp.stop_all()
 
     def get_handler(self) -> MessageHandler:
         handler = MessageHandler(

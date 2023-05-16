@@ -24,9 +24,7 @@ class CollectiveCallHandler(BotHandler):
         )
 
         await update.message.reply_text("https://meet.google.com/gft-kqkm-dud")
-
-        self.dsp.stop_rand_inv()
-        self.dsp.clear()
+        self.dsp.stop_all()
 
     def get_handler(self) -> CommandHandler:
         handler = CommandHandler(

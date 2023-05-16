@@ -6,6 +6,7 @@ from .handlers import (
     QAHandler,
     CollectiveCallHandler,
     BlueDollarHandler,
+    PublicIP,
 )
 
 
@@ -16,6 +17,7 @@ handlers = [
     QAHandler,
     CollectiveCallHandler,
     BlueDollarHandler,
+    PublicIP,
 ]
 
 bot_name = os.getenv("BOT_NAME")
