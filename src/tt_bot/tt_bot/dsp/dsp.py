@@ -7,10 +7,12 @@ class DSP:
 
     def dsp_post(self, endpoint: str, json_data: dict = {}):
         url = f"{self.base_url}{endpoint}/"
-        _ = requests.post(
+        response = requests.post(
             url,
             json=json_data,
         )
+
+        assert response.status_code == 200
 
     def start_rand_inv(self):
         self.dsp_post("start_rand_inv")
@@ -44,3 +46,6 @@ class DSP:
 
     def clear(self):
         self.dsp_post("clear")
+
+    def stop_all(self):
+        self.dsp_post("stop_all")

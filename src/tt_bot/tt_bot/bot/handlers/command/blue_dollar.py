@@ -27,7 +27,9 @@ class BlueDollarHandler(BotHandler):
         update: Update,
         context: ContextTypes.DEFAULT_TYPE,
     ):
+        self.dsp.stop_all()
         self.dsp.start_rand_inv()
+
         response = requests.get(self.url)
         assert response.status_code == 200
 
@@ -43,6 +45,7 @@ class BlueDollarHandler(BotHandler):
         )
 
         await update.message.reply_text(response)
+
         self.dsp.stop_rand_inv()
         self.dsp.clear()
 

@@ -40,7 +40,6 @@ class QAHandler(BotHandler):
         update: Update,
         context: ContextTypes.DEFAULT_TYPE,
     ):
-        self.dsp.start_rand_inv()
         mentions = update.effective_message.parse_entities(["mention"])
         mentions = set(mentions.values())
         logger.info(f"mentions => {mentions}")
@@ -51,6 +50,9 @@ class QAHandler(BotHandler):
         message = update.message
         if message is None:
             return
+
+        self.dsp.stop_all()
+        self.dsp.start_rand_inv()
 
         query_text = self.remove_bot_mention(message.text, self.bot_name)
         logger.info(f"query_text => {query_text}")
