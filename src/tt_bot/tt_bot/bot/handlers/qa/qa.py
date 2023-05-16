@@ -40,6 +40,7 @@ class QAHandler(BotHandler):
         update: Update,
         context: ContextTypes.DEFAULT_TYPE,
     ):
+        self.dsp.start_rand_inv()
         mentions = update.effective_message.parse_entities(["mention"])
         mentions = set(mentions.values())
         logger.info(f"mentions => {mentions}")
@@ -59,6 +60,9 @@ class QAHandler(BotHandler):
             await message.reply_text("I don't know")
             return
 
+        self.dsp.stop_rand_inv()
+        self.dsp.start_intermittent()
+
         response = doc_qa.get_answer(
             sim_chunks=sim_chunks,
             query_text=query_text,
@@ -69,6 +73,8 @@ class QAHandler(BotHandler):
             f"{response['answer']}\n\n{ref_text}",
             disable_web_page_preview=True,
         )
+
+        self.dsp.stop_intermittent()
 
     def get_handler(self) -> MessageHandler:
         handler = MessageHandler(

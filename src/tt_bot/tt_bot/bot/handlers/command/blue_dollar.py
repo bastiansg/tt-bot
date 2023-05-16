@@ -27,19 +27,24 @@ class BlueDollarHandler(BotHandler):
         update: Update,
         context: ContextTypes.DEFAULT_TYPE,
     ):
+        self.dsp.start_rand_inv()
         response = requests.get(self.url)
         assert response.status_code == 200
 
         soup = BeautifulSoup(response.content, features="html.parser")
-        found_div = soup.find("div", attrs={"class": "css-c9onyv"})
 
-        response = found_div.get_text(separator=" ", strip=True)
+        # FIXME how to extract this without hardcoding?
+        li_elems = soup.find_all("li")
+        response = li_elems[1].get_text(separator=" ", strip=True)
+
         response = self.parse_response_text(response)
         await update.message.reply_animation(
             animation="https://media.tenor.com/RCBLM9AmJzkAAAAd/dollar-bills-cash.gif"  # noqa
         )
 
         await update.message.reply_text(response)
+        self.dsp.stop_rand_inv()
+        self.dsp.clear()
 
     def get_handler(self) -> CommandHandler:
         handler = CommandHandler(
