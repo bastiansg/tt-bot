@@ -1,5 +1,11 @@
 import requests
 
+from tt_bot.logger import get_logger
+from requests.exceptions import ConnectionError
+
+
+logegr = get_logger(__name__)
+
 
 class DSP:
     def __init__(self, base_url: str = "http://0.0.0.0:8000/"):
@@ -7,10 +13,15 @@ class DSP:
 
     def dsp_post(self, endpoint: str, json_data: dict = {}):
         url = f"{self.base_url}{endpoint}/"
-        response = requests.post(
-            url,
-            json=json_data,
-        )
+        try:
+            response = requests.post(
+                url,
+                json=json_data,
+            )
+
+        except ConnectionError as err:
+            logegr.error(err)
+            return
 
         assert response.status_code == 200
 
