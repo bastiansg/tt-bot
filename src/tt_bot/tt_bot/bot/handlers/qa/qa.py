@@ -22,8 +22,9 @@ class QAHandler(BotHandler):
     def __init__(self, bot_name: str):
         super().__init__(bot_name=bot_name)
 
-    def remove_bot_mention(self, text: str, bot_name: str) -> str:
+    def parse_query_text(self, text: str, bot_name: str) -> str:
         text = text.replace(bot_name, "")
+        text = " ".join(text.split())
         text = text.strip()
 
         return text
@@ -48,13 +49,14 @@ class QAHandler(BotHandler):
             return
 
         message = update.message
-        if message is None:
-            return
-
         self.dsp.stop_all()
         self.dsp.start_rand_inv()
 
-        query_text = self.remove_bot_mention(message.text, self.bot_name)
+        query_text = self.parse_query_text(message.text, self.bot_name)
+        if not query_text:
+            logger.warning("No query text")
+            return
+
         logger.info(f"query_text => {query_text}")
 
         sim_chunks = await retrieval.retrieve(query_text)
@@ -82,7 +84,7 @@ class QAHandler(BotHandler):
     def get_handler(self) -> MessageHandler:
         handler = MessageHandler(
             filters.TEXT & ~filters.COMMAND,
-            self.callback,
+            self.apply_callback,
         )
 
         return handler

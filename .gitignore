@@ -2,5 +2,5 @@
 **/*.ipynb_checkpoints
 **/*.egg-info
 
-.credentials/*
-!.credentials/.gitkeep
+.secrets/*
+!.secrets/.gitkeep

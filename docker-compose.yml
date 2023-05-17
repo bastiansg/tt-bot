@@ -14,7 +14,7 @@ services:
             - $PWD/${NOTEBOOKS_VOLUME_MOUNT}
         env_file:
             - .env
-            - .credentials/.env
+            - .secrets/.env
 
     tt-bot-jupyter:
         image: ${JUPYTER_IMAGE}
@@ -30,7 +30,7 @@ services:
             - $PWD/${NOTEBOOKS_VOLUME_MOUNT}
         env_file:
             - .env
-            - .credentials/.env
+            - .secrets/.env
 
     tt-bot-app:
         image: ${APP_IMAGE}
@@ -43,5 +43,5 @@ services:
                 - CORE_IMAGE=${CORE_IMAGE}
         env_file:
             - .env
-            - .credentials/.env
+            - .secrets/.env
         restart: unless-stopped

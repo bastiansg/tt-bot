@@ -63,7 +63,7 @@ class BlueDollarHandler(BotHandler):
     def get_handler(self) -> CommandHandler:
         handler = CommandHandler(
             "blue",
-            self.callback,
+            self.apply_callback,
         )
 
         return handler

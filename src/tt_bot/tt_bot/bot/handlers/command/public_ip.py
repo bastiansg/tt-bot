@@ -47,7 +47,7 @@ class PublicIP(BotHandler):
     def get_handler(self) -> CommandHandler:
         handler = CommandHandler(
             "ip",
-            self.callback,
+            self.apply_callback,
         )
 
         return handler

@@ -29,7 +29,7 @@ class CollectiveCallHandler(BotHandler):
     def get_handler(self) -> CommandHandler:
         handler = CommandHandler(
             "call",
-            self.callback,
+            self.apply_callback,
         )
 
         return handler
