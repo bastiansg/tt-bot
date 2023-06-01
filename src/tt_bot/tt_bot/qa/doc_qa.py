@@ -11,7 +11,12 @@ logger = get_logger(__name__)
 
 class DocQA:
     def __init__(self):
-        llm = OpenAI(temperature=0.0)
+        llm = OpenAI(
+            model_name="text-davinci-003",
+            temperature=0.0,
+            max_tokens=-1,
+        )
+
         self.chain = load_qa_chain(llm, chain_type="stuff")
 
     def get_answer(self, sim_chunks: list[dict], query_text: str) -> str:

@@ -2,7 +2,9 @@ ARG CORE_IMAGE
 
 FROM ${CORE_IMAGE}
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN --mount=type=cache,target=/var/cache/apt \
+    --mount=target=/var/cache/apt,type=cache,sharing=locked \
+    apt-get update && apt-get install -y --no-install-recommends \
     zsh \
     vim \
     htop \
@@ -16,6 +18,10 @@ WORKDIR /tmp
 RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ENV SHELL=/usr/bin/zsh
 RUN chsh root -s $SHELL
+
+# Jupyterlab dark theme
+RUN mkdir -p ~/.jupyter/lab/user-settings/@jupyterlab/apputils-extension \
+    && echo '{"theme": "JupyterLab Dark"}' > ~/.jupyter/lab/user-settings/@jupyterlab/apputils-extension/themes.jupyterlab-settings
 
 # Therminal dark theme
 RUN mkdir -p ~/.jupyter/lab/user-settings/@jupyterlab/terminal-extension \

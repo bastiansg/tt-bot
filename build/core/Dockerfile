@@ -2,7 +2,9 @@ FROM ubuntu:lunar
 
 # OS packages
 ARG PYTHON_VERSION
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN --mount=type=cache,target=/var/cache/apt \
+    --mount=target=/var/cache/apt,type=cache,sharing=locked \
+    apt-get update && apt-get install -y --no-install-recommends \
     wget \
     unzip \
     curl \
