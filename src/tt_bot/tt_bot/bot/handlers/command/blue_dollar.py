@@ -53,9 +53,9 @@ class BlueDollarHandler(BotHandler):
         response = li_elems[1].get_text(separator=" ", strip=True)
 
         response = self.parse_response_text(response)
-        await update.message.reply_animation(
-            animation="https://media.tenor.com/RCBLM9AmJzkAAAAd/dollar-bills-cash.gif"  # noqa
-        )
+        # await update.message.reply_animation(
+        #     animation="https://media.tenor.com/RCBLM9AmJzkAAAAd/dollar-bills-cash.gif"  # noqa
+        # )
 
         await update.message.reply_text(response)
         self.dsp.stop_all()

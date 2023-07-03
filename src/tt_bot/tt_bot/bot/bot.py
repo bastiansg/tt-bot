@@ -4,7 +4,8 @@ from tt_bot.logger import get_logger
 from telegram.ext import ApplicationBuilder
 from .handlers import (
     QAHandler,
-    CollectiveCallHandler,
+    CallHandler,
+    EmergencyCallHandler,
     BlueDollarHandler,
     PublicIP,
 )
@@ -15,7 +16,8 @@ logger = get_logger(__name__)
 
 handlers = [
     QAHandler,
-    CollectiveCallHandler,
+    CallHandler,
+    EmergencyCallHandler,
     BlueDollarHandler,
     PublicIP,
 ]

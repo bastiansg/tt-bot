@@ -7,7 +7,7 @@ from telegram.ext import (
 )
 
 
-class CollectiveCallHandler(BotHandler):
+class EmergencyCallHandler(BotHandler):
     def __init__(self, bot_name: str):
         super().__init__(bot_name=bot_name)
 
@@ -28,7 +28,7 @@ class CollectiveCallHandler(BotHandler):
 
     def get_handler(self) -> CommandHandler:
         handler = CommandHandler(
-            "call",
+            "emergency_call",
             self.apply_callback,
         )
 
