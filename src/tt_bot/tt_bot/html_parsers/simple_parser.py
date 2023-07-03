@@ -42,7 +42,12 @@ class SimpleParser:
     async def parse_url(self, result: dict) -> Iterator[dict]:
         async with self.asyncio_semaphore:
             link = result["link"]
-            response = await self.httpx_client.get(link)
+            try:
+                response = await self.httpx_client.get(link)
+            except Exception as err:
+                logger.error(err)
+                return []
+
             if self.asyncio_semaphore.locked():
                 await asyncio.sleep(random.random())
 
