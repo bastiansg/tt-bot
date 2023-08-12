@@ -1,3 +1,7 @@
+include .env
+export $(shell sed 's/=.*//' .env)
+
+
 core-build:
 	docker compose build tt-bot-core
 
@@ -23,3 +27,13 @@ app-up: app-build
 
 app-stop:
 	docker compose stop tt-bot-app
+
+
+mongo-start:
+	docker compose up -d tt-bot-mongo
+
+mongo-stop:
+	docker compose stop tt-bot-mongo
+
+mongo-cache-flush:
+	docker compose exec tt-bot-mongo mongosh $(CACHE_DB) --eval "db.dropDatabase();" > /dev/null

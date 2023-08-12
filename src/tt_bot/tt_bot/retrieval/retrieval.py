@@ -3,8 +3,8 @@ import numpy as np
 from tt_bot.logger import get_logger
 from tt_bot.utils.json_data import group_by_key
 
-from tt_bot.search_engine import SearchEngine
 from tt_bot.text_encoders import OpenAIEncoder
+from tt_bot.search_engines import GoogleSearchEngine
 
 
 logger = get_logger(__name__)

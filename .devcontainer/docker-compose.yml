@@ -8,5 +8,8 @@ services:
             dockerfile: .devcontainer/Dockerfile
         volumes:
             - ..:/workspace:cached
-        # Please do not comment or remove this line!
-        command: /bin/sh -c "while sleep 1000; do :; done"
+        env_file:
+            - ../.env
+            - ../.secrets/.env
+        # This keeps the devcontainer running.
+        entrypoint: [ "tail", "-f", "/dev/null" ]
