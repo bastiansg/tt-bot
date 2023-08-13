@@ -45,3 +45,4 @@ services:
                 limits:
                     cpus: '1'
                     memory: 128M
+        restart: unless-stopped
