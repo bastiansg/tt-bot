@@ -7,7 +7,7 @@ from .handlers import (
     CallHandler,
     EmergencyCallHandler,
     BlueDollarHandler,
-    PublicIP,
+    PublicIPHandler,
 )
 
 
@@ -19,7 +19,7 @@ handlers = [
     CallHandler,
     EmergencyCallHandler,
     BlueDollarHandler,
-    PublicIP,
+    PublicIPHandler,
 ]
 
 bot_name = os.getenv("BOT_NAME")

@@ -10,24 +10,8 @@ services:
                 - PYTHON_VERSION=${PYTHON_VERSION}
                 - PIP_VERSION=${PIP_VERSION}
         volumes:
-            - $PWD/${SRC_VOLUME_MOUNT}
-            - $PWD/${NOTEBOOKS_VOLUME_MOUNT}
-        env_file:
-            - .env
-            - .secrets/.env
-
-    tt-bot-jupyter:
-        image: ${JUPYTER_IMAGE}
-        container_name: tt-bot-jupyter
-        network_mode: host
-        build:
-            context: .
-            dockerfile: ./build/jupyter/Dockerfile
-            args:
-                - CORE_IMAGE=${CORE_IMAGE}
-        volumes:
-            - $PWD/${SRC_VOLUME_MOUNT}
-            - $PWD/${NOTEBOOKS_VOLUME_MOUNT}
+            - $PWD/src:/src
+            - $PWD/notebooks:/notebooks
         env_file:
             - .env
             - .secrets/.env
@@ -41,7 +25,23 @@ services:
             dockerfile: ./build/app/Dockerfile
             args:
                 - CORE_IMAGE=${CORE_IMAGE}
+        volumes:
+            - $PWD/resources:/resources
         env_file:
             - .env
             - .secrets/.env
         restart: unless-stopped
+
+
+    tt-bot-mongo:
+        image: mongo:${MONGODB_VERSION}
+        container_name: tt-bot-mongo
+        ports:
+            - '27017:27017'
+        volumes:
+            - $PWD/resources/cache/mongo/db:/data/db:z
+        deploy:
+            resources:
+                limits:
+                    cpus: '1'
+                    memory: 128M

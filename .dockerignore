@@ -3,5 +3,5 @@
 **/*.egg-info
 
 .git/
-resources/
 notebooks/
+resources/cache/

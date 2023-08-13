@@ -33,10 +33,16 @@ RUN wget --no-check-certificate \
     && cd pip-${PIP_VERSION} \
     && python setup.py install
 
+
+# Install tt-bot reqs
+COPY ./src/tt_bot/requirements.txt requirements.txt
+RUN --mount=type=cache,target=/root/.cache \
+    pip install -r requirements.txt --break-system-packages
+
 # Install tt-bot
 COPY ./src/tt_bot /tmp/tt_bot
 RUN --mount=type=cache,target=/root/.cache \
-    pip install --break-system-packages ./tt_bot
+    pip install --no-deps --break-system-packages ./tt_bot
 
 # Clean
 RUN rm -rf /tmp/*

@@ -1,0 +1,28 @@
+model-name: "gpt-3.5-turbo-16k"
+max-tokens: 2048
+temperature: 0.0
+max-sentences: 10
+unknown-answer: "I don't know"
+system-prompt-template: >-
+  Assume the role of a seasoned investigative journalist.
+  You will be given a set of text excerpts and a question.
+  Your task is to formulate an answer to the question, strictly based on the information contained within the text excerpts.
+
+human-prompt-template: |
+  Consider the following text excerpts:
+
+  {text_chunks}
+
+  Now, consider the following question:
+
+  {question}
+
+  Your task is to formulate an answer to the question, strictly based on the information contained within the text excerpts.
+  The answer should not exceed {max_sentences} sentences.
+  Make sure to use all the text excerpts provided to elaborate the answer.
+
+  The output must be a JSON formatted dictionary with the following key:
+  - "answer": a string representing the answer to the question
+
+  Please note, if the answer cannot be derived solely based on the text excerpts provided,
+  the value for the key "answer" must be null.
