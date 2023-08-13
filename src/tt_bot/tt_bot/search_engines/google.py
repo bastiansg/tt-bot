@@ -2,23 +2,20 @@ from langchain.utilities import GoogleSearchAPIWrapper
 
 from tt_bot.cache import cache
 from tt_bot.logger import get_logger
-from tt_bot.meta import SearchResult
+from tt_bot.meta import SearchEngine, SearchResponse
 
 
 logger = get_logger(__name__)
 
 
-class GoogleSearchEngine:
-    def __init__(self):
+class GoogleSearchEngine(SearchEngine):
+    def __init__(self, num_results: int = 3):
+        super().__init__(num_results=num_results)
         self.search_engine = GoogleSearchAPIWrapper()
 
     @cache
-    def search(
-        self,
-        query_text: str,
-        num_results: int = 3,
-    ) -> list[SearchResult]:
-        results = self.search_engine.results(query_text, num_results)
+    def search(self, query_text: str) -> list[SearchResponse]:
+        results = self.search_engine.results(query_text, self.num_results)
         if (
             results[0].get("Result")
             == "No good Google Search Result was found"
@@ -26,12 +23,13 @@ class GoogleSearchEngine:
             logger.info("No google results")
             return []
 
+        logger.info(f"search_engine_results => {results}")
         search_results = [
-            SearchResult(
+            SearchResponse(
                 title=result["title"],
                 link=result["link"],
                 snippet=result["snippet"],
-                wikipedia=True if "Wikipedia" in result["title"] else False,
+                extract_strategy=self.get_extract_strategy(result["title"]),
             )
             for result in results
         ]

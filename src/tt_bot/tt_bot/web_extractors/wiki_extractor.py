@@ -2,9 +2,11 @@ import regex
 import urllib
 import requests
 
+from itertools import islice
+
 from tt_bot.cache import cache
 from tt_bot.logger import get_logger
-from tt_bot.meta import SearchResult, WebExtractor, TextChunk
+from tt_bot.meta import SearchResponse, WebExtractor, TextChunk
 
 
 logger = get_logger(__name__)
@@ -13,13 +15,11 @@ logger = get_logger(__name__)
 class WikiExtractor(WebExtractor):
     def __init__(
         self,
-        max_paragraphs: int = 10,
         lang_pattern: str = r"(https:\/\/)(.*)(.wikipedia.org)",
         clean_pattern: str = r"\[\d{1,}\]\u200b",
     ):
         super().__init__()
 
-        self.max_paragraphs = max_paragraphs
         self.lang_pattern = regex.compile(lang_pattern)
         self.clean_pattern = regex.compile(clean_pattern)
 
@@ -31,7 +31,7 @@ class WikiExtractor(WebExtractor):
         return pargraph
 
     @cache
-    def extract(self, search_result: SearchResult) -> list[TextChunk]:
+    def extract(self, search_result: SearchResponse) -> list[TextChunk]:
         link = search_result.link
         lang = self.lang_pattern.search(link).groups()[1]
         wiki_title = search_result.title.split(" - ")[0]
@@ -58,7 +58,9 @@ class WikiExtractor(WebExtractor):
             return []
 
         paragraphs = wiki_header.split("\n")
-        paragraphs = [self.parse_paragraph(p) for p in paragraphs]
+        paragraphs = (self.parse_paragraph(p) for p in paragraphs)
+        paragraphs = islice(paragraphs, self.max_paragraphs)
+
         snippet = search_result.snippet
         text_chunks = [
             TextChunk(
@@ -67,7 +69,7 @@ class WikiExtractor(WebExtractor):
                 text=p,
                 snippet=snippet,
             )
-            for idx, p in enumerate(paragraphs[: self.max_paragraphs])
+            for idx, p in enumerate(paragraphs)
         ]
 
         return text_chunks

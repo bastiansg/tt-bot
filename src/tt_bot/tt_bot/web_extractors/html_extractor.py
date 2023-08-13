@@ -1,11 +1,13 @@
 import requests
 
 from bs4 import BeautifulSoup
+
+from itertools import islice
 from more_itertools import flatten
 
 from tt_bot.cache import cache
 from tt_bot.logger import get_logger
-from tt_bot.meta import SearchResult, WebExtractor, TextChunk
+from tt_bot.meta import SearchResponse, WebExtractor, TextChunk
 
 
 logger = get_logger(__name__)
@@ -14,15 +16,15 @@ logger = get_logger(__name__)
 class HTMLExtractor(WebExtractor):
     def __init__(
         self,
+        max_elements: int = 50,
+        min_paragraph_words: int = 10,
         find_elements: list[str] = ["p"],
-        max_concurrency: int = 50,
-        max_elements: int = 5,
     ):
         super().__init__()
 
-        self.find_elements = find_elements
-        self.max_concurrency = max_concurrency
         self.max_elements = max_elements
+        self.min_paragraph_words = min_paragraph_words
+        self.find_elements = find_elements
 
     def text_normalize(self, text: str) -> str:
         text = text.replace("\xa0", " ")
@@ -31,7 +33,7 @@ class HTMLExtractor(WebExtractor):
         return text
 
     @cache
-    def extract(self, search_result: SearchResult) -> list[TextChunk]:
+    def extract(self, search_result: SearchResponse) -> list[TextChunk]:
         link = search_result.link
 
         try:
@@ -51,15 +53,22 @@ class HTMLExtractor(WebExtractor):
             for find_element in self.find_elements
         )
 
+        paragraphs = (p.text.split("\n") for p in next(found_elements))
+        paragraphs = map(self.text_normalize, flatten(paragraphs))
+        paragraphs = (
+            p for p in paragraphs if len(p.split()) >= self.min_paragraph_words
+        )
+
+        paragraphs = islice(paragraphs, self.max_paragraphs)
         snippet = search_result.snippet
         text_chunks = [
             TextChunk(
                 source=link,
                 idx=idx,
-                text=self.text_normalize(element.text),
+                text=p,
                 snippet=snippet,
             )
-            for idx, element in enumerate(flatten(found_elements))
+            for idx, p in enumerate(paragraphs)
         ]
 
         return text_chunks

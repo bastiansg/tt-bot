@@ -3,7 +3,7 @@ import numpy as np
 from langchain.embeddings import OpenAIEmbeddings
 
 from tt_bot.cache import cache
-from tt_bot.meta import TextEncoder, TextChunk
+from tt_bot.meta import TextEncoder
 
 
 class OpenAIEncoder(TextEncoder):
@@ -11,8 +11,7 @@ class OpenAIEncoder(TextEncoder):
         self.model = OpenAIEmbeddings()
 
     @cache
-    def encode(self, text_chunks: list[TextChunk]) -> np.ndarray:
-        texts = [tc.text for tc in text_chunks]
+    def encode(self, texts: list[str]) -> np.ndarray:
         embeddings = self.model.embed_documents(texts)
         embeddings = np.array(embeddings)
 

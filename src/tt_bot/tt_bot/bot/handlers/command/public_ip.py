@@ -13,7 +13,7 @@ from telegram.ext import (
 logger = get_logger(__name__)
 
 
-class PublicIP(BotHandler):
+class PublicIPHandler(BotHandler):
     def __init__(self, bot_name: str):
         super().__init__(bot_name=bot_name)
 

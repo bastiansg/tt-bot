@@ -1,0 +1,4 @@
+model-name: "gpt-3.5-turbo-16k"
+max-tokens: 2048
+temperature: 0.0
+chain-type: "stuff"

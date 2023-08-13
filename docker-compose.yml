@@ -10,8 +10,8 @@ services:
                 - PYTHON_VERSION=${PYTHON_VERSION}
                 - PIP_VERSION=${PIP_VERSION}
         volumes:
-            - $PWD/${SRC_VOLUME_MOUNT}
-            - $PWD/${NOTEBOOKS_VOLUME_MOUNT}
+            - $PWD/src:/src
+            - $PWD/notebooks:/notebooks
         env_file:
             - .env
             - .secrets/.env
@@ -25,6 +25,8 @@ services:
             dockerfile: ./build/app/Dockerfile
             args:
                 - CORE_IMAGE=${CORE_IMAGE}
+        volumes:
+            - $PWD/resources:/resources
         env_file:
             - .env
             - .secrets/.env
