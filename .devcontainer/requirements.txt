@@ -1,10 +1,4 @@
-# code style
-black==23.7.0
-flake8==6.1.0
-
-# jupyter development
 jupyter==1.0.0
 ipywidgets==8.0.7
 
-# utils
 pip-search==0.0.12

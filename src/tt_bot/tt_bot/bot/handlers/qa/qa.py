@@ -6,7 +6,11 @@ from tt_bot.retrievals import WebRetrieval
 from tt_bot.search_engines import GoogleSearchEngine
 from tt_bot.text_encoders import OpenAIEncoder
 from tt_bot.llm_components import LgChainQA
-from tt_bot.web_extractors import HTMLExtractor, WikiExtractor
+from tt_bot.web_extractors import (
+    HTMLExtractor,
+    WikiExtractor,
+    LinkedinExtractor,
+)
 
 from telegram import Update
 from telegram.ext import (
@@ -29,6 +33,7 @@ class QAHandler(BotHandler):
         extractors = {
             "html": HTMLExtractor(),
             "wikipedia": WikiExtractor(),
+            "linkedin": LinkedinExtractor(),
         }
 
         self.web_retrieval = WebRetrieval(

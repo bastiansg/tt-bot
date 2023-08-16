@@ -4,7 +4,6 @@ from pydantic import (
     BaseModel,
     StrictStr,
     HttpUrl,
-    NonNegativeInt,
     PositiveInt,
     StrictFloat,
 )
@@ -13,6 +12,7 @@ from pydantic import (
 EXTRACT_STRATEGIES = [
     "html",
     "wikipedia",
+    "linkedin",
 ]
 
 
@@ -20,14 +20,14 @@ class SearchResponse(BaseModel):
     title: StrictStr
     link: HttpUrl
     snippet: StrictStr
-    extract_strategy: StrictStr
+    link_type: StrictStr
 
-    @validator("extract_strategy")
-    def extract_strategy_validator(cls, v):
+    @validator("link_type")
+    def link_type_validator(cls, v):
         if v not in EXTRACT_STRATEGIES:
             raise ValueError(
-                f"Invalid extract_strategy: {v},"
-                "extract_strategy must be one of the following strings:"
+                f"Invalid link_type: {v},"
+                "link_type must be one of the following strings:"
                 f" {EXTRACT_STRATEGIES}"
             )
 
@@ -36,7 +36,7 @@ class SearchResponse(BaseModel):
 
 class TextChunk(BaseModel):
     source: StrictStr
-    idx: NonNegativeInt
+    idx: PositiveInt
     snippet: StrictStr
     text: StrictStr
 

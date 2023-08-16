@@ -27,7 +27,7 @@ class WebRetrieval(Retrieval):
         search_engine: SearchEngine,
         text_encoder: TextEncoder,
         extractors: dict[str, WebExtractor],
-        sim_tresh: float = 0.8,
+        sim_tresh: float = 0.7,
         top_k: int = 3,
     ):
         super().__init__(
@@ -55,7 +55,7 @@ class WebRetrieval(Retrieval):
             return []
 
         async_tasks = (
-            self.extractors[search_response.extract_strategy].async_extract(
+            self.extractors[search_response.link_type].async_extract(
                 search_response
             )
             for search_response in track(
@@ -72,6 +72,8 @@ class WebRetrieval(Retrieval):
 
         question_embedding = self.text_encoder.encode([query_text])
         sims = np.inner(question_embedding, chunk_embeddings).ravel()
+        logger.info(f"simis => {sims}")
+
         sims_idx = np.nonzero(sims >= self.sim_tresh)[0]
         if not len(sims_idx):
             logger.info("no good enough answers")

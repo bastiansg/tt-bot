@@ -38,7 +38,7 @@ class PublicIPHandler(BotHandler):
 
         public_ip = response.content.decode()
         await update.message.reply_text(
-            f"Office public ip: `{public_ip}`",
+            f"Public ip: `{public_ip}`",
             parse_mode="MarkdownV2",
         )
 

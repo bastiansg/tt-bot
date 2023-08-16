@@ -9,6 +9,8 @@ services:
         volumes:
             - ..:/workspace:cached
             - ../resources/:/resources
+            - $HOME/.ssh/:/home/vscode/.ssh:ro
+            - $HOME/.gitconfig:/home/vscode/.gitconfig:ro
         env_file:
             - ../.env
             - ../.secrets/.env

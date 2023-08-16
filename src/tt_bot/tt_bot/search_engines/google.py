@@ -29,7 +29,7 @@ class GoogleSearchEngine(SearchEngine):
                 title=result["title"],
                 link=result["link"],
                 snippet=result["snippet"],
-                extract_strategy=self.get_extract_strategy(result["title"]),
+                link_type=self.get_link_type(result["link"]),
             )
             for result in results
         ]

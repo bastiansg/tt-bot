@@ -7,8 +7,9 @@
 	"customizations": {
 		"vscode": {
 			"settings": {
+				"notebook.output.scrolling": true,
 				"python.linting.flake8Enabled": true,
-				"python.formatting.provider": "black",
+				"python.formatting.provider": "none",
 				"python.formatting.blackArgs": [
 					"--line-length=79"
 				],
@@ -24,8 +25,17 @@
 					"./notebooks/**": true
 				}
 			},
+			"[python]": {
+				"editor.defaultFormatter": "ms-python.black-formatter",
+				"editor.formatOnSave": true,
+				"editor.codeActionsOnSave": {
+					"source.organizeImports": true
+				}
+			},
 			"extensions": [
 				"ms-python.python",
+				"ms-python.black-formatter",
+				"ms-python.flake8",
 				"eamodio.gitlens",
 				"njpwerner.autodocstring",
 				"ms-azuretools.vscode-docker",

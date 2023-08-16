@@ -8,3 +8,4 @@ openai==0.27.8
 tiktoken==0.4.0
 beautifulsoup4==4.12.2
 pymongo==4.4.1
+linkedin_api==2.0.1

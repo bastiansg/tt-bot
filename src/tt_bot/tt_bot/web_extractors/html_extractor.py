@@ -68,7 +68,7 @@ class HTMLExtractor(WebExtractor):
                 text=p,
                 snippet=snippet,
             )
-            for idx, p in enumerate(paragraphs)
+            for idx, p in enumerate(paragraphs, start=1)
         ]
 
         return text_chunks
