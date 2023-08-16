@@ -63,14 +63,16 @@ class WebRetrieval(Retrieval):
             )
         )
 
+        logger.info("creating text chunks")
         text_chunks = await asyncio.gather(*async_tasks)
         text_chunks = list(flatten(text_chunks))
 
         texts = [tc.text for tc in text_chunks]
+        logger.info("creating text embeddings")
         chunk_embeddings = self.text_encoder.encode(texts=texts)
-        logger.info(f"chunk_embeddings => {chunk_embeddings.shape}")
-
         question_embedding = self.text_encoder.encode([query_text])
+
+        logger.info("computing similarities")
         sims = np.inner(question_embedding, chunk_embeddings).ravel()
         logger.info(f"simis => {sims}")
 

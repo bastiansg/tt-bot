@@ -72,4 +72,5 @@ class WikiExtractor(WebExtractor):
             for idx, p in enumerate(paragraphs, start=1)
         ]
 
+        logger.info(f"text_chunks => {len(text_chunks)}")
         return text_chunks

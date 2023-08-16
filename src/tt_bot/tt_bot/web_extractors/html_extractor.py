@@ -37,7 +37,7 @@ class HTMLExtractor(WebExtractor):
         link = search_result.link
 
         try:
-            response = requests.get(link)
+            response = requests.get(link, timeout=5)
         except Exception as err:
             logger.error(err)
             return []
@@ -71,4 +71,5 @@ class HTMLExtractor(WebExtractor):
             for idx, p in enumerate(paragraphs, start=1)
         ]
 
+        logger.info(f"text_chunks => {len(text_chunks)}")
         return text_chunks
