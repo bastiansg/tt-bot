@@ -1,3 +1,5 @@
+import regex
+
 from more_itertools import flatten
 
 from tt_bot.meta import BotHandler
@@ -24,7 +26,12 @@ logger = get_logger(__name__)
 
 
 class QAHandler(BotHandler):
-    def __init__(self, bot_name: str, unknown_answer: str = "I don't know"):
+    def __init__(
+        self,
+        bot_name: str,
+        unknown_answer: str = "I don't know",
+        markdownv2_pattern: str = r"(_|\*|\[|\]|\(|\)|~|>|#|\+|\-|=|\||{|}|\.|!)",  # noqa
+    ):
         super().__init__(bot_name=bot_name)
         self.unknown_answer = unknown_answer
 
@@ -43,6 +50,7 @@ class QAHandler(BotHandler):
         )
 
         self.openai_qa = LgChainQA()
+        self.markdownv2_pattern = regex.compile(markdownv2_pattern)
 
     def parse_query_text(self, text: str, bot_name: str) -> str:
         text = text.replace(bot_name, "")
@@ -113,9 +121,13 @@ class QAHandler(BotHandler):
         ]
 
         reference_text = self.get_reference_text(reference)
+        response_text = f"{answer_text}\n\n{reference_text}"
+        response_text = self.markdownv2_pattern.sub(r"\\\1", response_text)
+
         await update.message.reply_text(
-            f"{answer_text}\n\n{reference_text}",
+            response_text,
             disable_web_page_preview=True,
+            parse_mode="MarkdownV2",
         )
 
         self.dsp.stop_all()

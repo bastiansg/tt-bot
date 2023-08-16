@@ -1,7 +1,7 @@
 import os
-import pickle
 import gridfs
-import inspect
+import hashlib
+import cloudpickle
 
 from joblib import hash
 from typing import Callable
@@ -31,12 +31,12 @@ class Cache:
     def exists(self, cache_key: str) -> bool:
         return bool(self.fs.find_one({"_id": cache_key}))
 
-    def save(self, cache_key: str, _object: Any):
+    def save(self, cache_key: str, obj: Any):
         if self.exists(cache_key):
             return
 
         logger.debug(f'saving in cache => "{cache_key}"')
-        data = pickle.dumps(_object)
+        data = cloudpickle.dumps(obj)
         self.fs.put(_id=cache_key, data=data)
 
     def load(self, cache_key: str) -> Optional[Any]:
@@ -45,8 +45,8 @@ class Cache:
             return
 
         logger.debug(f'loading from cache => "{cache_key}"')
-        _object = pickle.loads(data.read())
-        return _object
+        obj = cloudpickle.loads(data.read())
+        return obj
 
     def get_cache_keys(self) -> set[str]:
         cache_keys = set(item._id for item in self.fs.find({}))
@@ -57,7 +57,7 @@ _cache = Cache()
 
 
 def get_cache_key(args: tuple, kwargs: dict, func: Callable) -> str:
-    func_part = hash(inspect.getsource(func))
+    func_part = hashlib.md5(cloudpickle.dumps(func)).hexdigest()
     args_part = hash(args)
     kwargs_part = hash(sorted(kwargs.items()))
 
