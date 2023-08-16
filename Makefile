@@ -3,6 +3,7 @@ export $(shell sed 's/=.*//' .env)
 
 
 core-build:
+	[ -e .secrets/.env ] || touch .secrets/.env
 	docker compose build tt-bot-core
 
 core-run:
