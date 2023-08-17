@@ -66,6 +66,8 @@ class WebRetrieval(Retrieval):
         logger.info("creating text chunks")
         text_chunks = await asyncio.gather(*async_tasks)
         text_chunks = list(flatten(text_chunks))
+        if not text_chunks:
+            return []
 
         texts = [tc.text for tc in text_chunks]
         logger.info("creating text embeddings")

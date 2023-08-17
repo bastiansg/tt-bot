@@ -71,5 +71,15 @@ class HTMLExtractor(WebExtractor):
             for idx, p in enumerate(paragraphs, start=1)
         ]
 
+        if not text_chunks:
+            text_chunks = [
+                TextChunk(
+                    source=link,
+                    idx=1,
+                    text=snippet,
+                    snippet=snippet,
+                )
+            ]
+
         logger.info(f"text_chunks => {len(text_chunks)}")
         return text_chunks

@@ -33,7 +33,7 @@ def parse_experience(experience_item: dict) -> dict:
     time_period = experience_item.get("timePeriod", {})
     parsed_experience = {
         "company_name": experience_item["companyName"],
-        "title": experience_item["title"],
+        "title": experience_item.get("title"),
         "start_year": time_period.get("startDate", {}).get("year"),
         "end_year": time_period.get("endDate", {}).get("year"),
     }
@@ -44,7 +44,7 @@ def parse_experience(experience_item: dict) -> dict:
 def parse_language(language_item: dict) -> dict:
     parsed_language = {
         "name": language_item["name"],
-        "level": language_item["proficiency"],
+        "level": language_item.get("proficiency"),
     }
 
     return parsed_language
